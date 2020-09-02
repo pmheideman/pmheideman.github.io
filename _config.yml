@@ -236,7 +236,7 @@ defaults:
    # _public
   - scope:
       path: ""
-      type: publications
+      type: public
     values:
       layout: single
       author_profile: true
@@ -245,7 +245,7 @@ defaults:
    # _academic
   - scope:
       path: ""
-      type: publications
+      type: academic
     values:
       layout: single
       author_profile: true
