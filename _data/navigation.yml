@@ -9,10 +9,10 @@ main:
   - title: "Teaching"
     url: /teaching/    
     
-   - title: "Public Scholarship"
+  - title: "Public Scholarship"
     url: /public/
    
-   - title: "Academic Writing"
+  - title: "Academic Writing"
     url: /academic/
         
   - title: "Blog Posts"
