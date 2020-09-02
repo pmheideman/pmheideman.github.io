@@ -4,7 +4,7 @@ collection: teaching
 type: "Undergraduate Course"
 permalink: /summer_2020
 venue: "New York University, Department of Sociology"
-date: 2020
+date: "2020"
 location: "City, Country"
 ---
 
