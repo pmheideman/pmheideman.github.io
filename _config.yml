@@ -181,6 +181,12 @@ collections:
   publications:
     output: true
     permalink: /:collection/:path/
+  academic:
+    output: true
+    permalink: /:collection/:path/
+   public:
+    output: true
+    permalink: /:collection/:path/
   portfolio:
     output: true
     permalink: /:collection/:path/
