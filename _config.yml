@@ -190,6 +190,9 @@ collections:
   public:
     output: true
     permalink: /:collection/:path/
+  academic:
+    output: true
+    permalink: /:collection/:path/
 
 
 # Defaults
