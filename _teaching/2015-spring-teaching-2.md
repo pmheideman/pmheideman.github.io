@@ -1,5 +1,5 @@
 ---
-title: "Teaching experience 2"
+title: "Teaching experience 2: electric boogaloo"
 collection: teaching
 type: "Workshop"
 permalink: /teaching/2015-spring-teaching-1
