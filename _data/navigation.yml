@@ -10,10 +10,10 @@ main:
     url: /teaching/    
     
   -title: "Public Scholarship"
-   url: /public
+   url: /public/
    
    -title: "Academic Writing"
-    url: /academic
+    url: /academic/
         
   - title: "Blog Posts"
     url: /year-archive/
