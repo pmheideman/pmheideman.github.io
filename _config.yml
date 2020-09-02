@@ -227,15 +227,25 @@ defaults:
       author_profile: true
       share: true
       comments: true
-  # _portfolio
+   # _public
   - scope:
       path: ""
-      type: portfolio
+      type: publications
     values:
       layout: single
       author_profile: true
       share: true
-      comment: true
+      comments: true
+   # _academic
+  - scope:
+      path: ""
+      type: publications
+    values:
+      layout: single
+      author_profile: true
+      share: true
+      comments: true
+
   # _talks
   - scope:
       path: ""
