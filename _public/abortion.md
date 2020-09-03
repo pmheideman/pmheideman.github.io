@@ -9,4 +9,4 @@ paperurl:
 citation: 
 ---
 
-[](https://www.jacobinmag.com/2019/05/abortion-rights-polling-opinion-democracy)
+[Don't let the slate of new anti-abortion bills fool you — support for abortion rights has actually increased in the last decade. Defeating these draconian measures will mean defeating the elite minority that imposes them.](https://www.jacobinmag.com/2019/05/abortion-rights-polling-opinion-democracy)
