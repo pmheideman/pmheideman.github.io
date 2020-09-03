@@ -1,7 +1,7 @@
 ---
-title: "How McCarthyism and the Red Scare Hurt the Black Freedom Struggle"
+title: "The First March on Washington"
 collection: public
-permalink: /public/mccarthyism
+permalink: /public/first_march
 excerpt: 
 date: 2019-08-27
 venue: 'Jacobin'
