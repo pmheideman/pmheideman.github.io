@@ -5,7 +5,7 @@ permalink: /public/mccarthyism
 excerpt: 
 date: 2020-05-21
 venue: 'Jacobin'
-paperurl: 
+paperurl: 'https://www.jacobinmag.com/2020/05/mccarthyism-red-scare-civil-rights-movement'
 citation: 
 ---
 
