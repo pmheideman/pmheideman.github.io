@@ -9,6 +9,11 @@ paperurl: 'https://www.haymarketbooks.org/books/946-class-struggle-and-the-color
 citation: 'Your Name, You. (2009). &quot;Paper Title Number 1.&quot; <i>Journal 1</i>. 1(1).'
 ---
 
+As Black oppression moves again to the forefront of American public life, the history of radical approaches to combating racism has acquired renewed relevance.
+
+Collecting, for the first time, source materials from a diverse array of writers and organizers, this reader provides a new perspective on the complex history of revolutionary debates about fighting anti-Black racism. Contextual material from the editor places each contribution in its historical and political setting, making this volume ideal for both scholars and activists.
+
+
 
 # Praise for *Class Struggle and the Color Line*
 
