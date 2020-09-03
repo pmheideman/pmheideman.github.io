@@ -9,6 +9,7 @@ paperurl: 'https://www.haymarketbooks.org/books/946-class-struggle-and-the-color
 citation: 'Your Name, You. (2009). &quot;Paper Title Number 1.&quot; <i>Journal 1</i>. 1(1).'
 ---
 
+
 # Praise for *Class Struggle and the Color Line*
 
 "Paul Heideman’s book reconstructs for us the long flowering of anti-racist thought and organizing on the American Left and the central role played by Black Socialists in advancing a theory and practice of human liberation. Class struggle and anti-racism are two sides of the same coin in this powerful collection. At a time when the emancipation of oppressed and working-class people remain goals of progressives everywhere, Heideman’s book provides us a map to a past that can help us get free."-Bill V. Mullen, Professor of American Studies, Purdue University
