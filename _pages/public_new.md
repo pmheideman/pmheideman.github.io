@@ -69,6 +69,8 @@ author_profile: true
 
 [Despite all evidence to the contrary, blaming black culture for racial inequality remains politically dominant. And not only on the Right.](https://www.jacobinmag.com/2014/09/the-poverty-of-culture)
 
+# 2014
+
 ## "Bulletproof Neoliberalism"
 
 [To understand how a body of thought became an era of capitalism requires more than intellectual history.](https://www.jacobinmag.com/2014/06/bulletproof-neoliberalism)
