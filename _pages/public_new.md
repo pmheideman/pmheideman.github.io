@@ -10,7 +10,7 @@ author_profile: true
 
 ## "When Rioting Works"
 
-![image](images/rioting.png)
+![image](https://github.com/pmheideman/pmheideman.github.io/blob/master/images/rioting.png)
 
 [Rioting is a rational response to grinding poverty and oppression. And though it’s not always the case, research shows that it can be effective in winning social change.](https://www.jacobinmag.com/2020/06/rioting-george-floyd-liberals-black-lives-matter)
 
