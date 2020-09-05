@@ -53,4 +53,23 @@ author_profile: true
 
 [Despite its ultimate demise, the Socialist Party shows us that the United States possesses no special immunity against socialist politics.](https://www.jacobinmag.com/2017/02/rise-and-fall-socialist-party-of-america)
 
+# 2016
+
+## "It's Their Party"
+
+[A generation ago, socialists and civil rights activists tried to transform the Democratic Party. Why did they fail?](https://www.jacobinmag.com/2016/02/democratic-party-realignment-civil-rights-mcgovern-meany-rustin-sanders)
+
+# 2015
+
+## "Technology and Socialist Strategy"
+
+[With powerful class movements behind it, technology can promise emancipation from work, not more misery.](https://www.jacobinmag.com/2015/04/braverman-gramsci-marx-technology)
+
+## "The Poverty of Culture"
+
+[Despite all evidence to the contrary, blaming black culture for racial inequality remains politically dominant. And not only on the Right.](https://www.jacobinmag.com/2014/09/the-poverty-of-culture)
+
+## "Bulletproof Neoliberalism"
+
+[To understand how a body of thought became an era of capitalism requires more than intellectual history.](https://www.jacobinmag.com/2014/06/bulletproof-neoliberalism)
 
