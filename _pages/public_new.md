@@ -24,3 +24,7 @@ author_profile: true
 ## "The First March on Washington"
 
 [A. Philip Randolph called for a March on Washington to force President Roosevelt to abolish Jim Crow in the war effort, and shaped the trajectory of the postwar left.](https://www.jacobinmag.com/2019/08/the-first-march-on-washington)
+
+## "The Most Important Black Radical You've Never Heard Of"
+
+[Hubert Harrison was one of the first black socialists in the United States, a fierce champion of racial equality, and a pioneering analyst of how capitalists use racism to divide the working class. He deserves to be remembered.](https://www.jacobinmag.com/2019/06/black-radicalism-hubert-harrison-web-dubois-malcolm-x)
