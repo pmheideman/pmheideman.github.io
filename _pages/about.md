@@ -22,4 +22,4 @@ Teaching
 ======
 I have taught at the University of Wisconsin, Rutgers-Newark, Bloomfield College, New York University, and the Ethical Culture Fieldston School. Some of my syllabuses are available under the Teaching tab above.
 
-![image](images/profile.png)
+
