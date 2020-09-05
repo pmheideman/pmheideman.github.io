@@ -6,6 +6,8 @@ author_profile: true
 
 # 2020
 
+![image](images/profile.png)
+
 ## "When Rioting Works"
 
 ![image](images/rioting.png)
