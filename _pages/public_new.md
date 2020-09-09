@@ -6,6 +6,10 @@ author_profile: true
 
 # 2020
 
+## "The Soul of the Democratic Party Has Always Belonged to Capital"
+
+[Henry Wallace was an ambitious left-winger in Roosevelt’s Democratic Party who, as secretary of agriculture and then as vice president, helped make radical the New Deal of the 1930s. His ultimate defeat by the right of his own party shows the obstacles the insurgent left has always faced within the Democratic Party.](https://www.jacobinmag.com/2020/09/henry-wallace-democratic-party-nichols)
+
 ## "How Democracies End"
 
 [A new study suggests that most democracies are stable but not immune to decline and fall.](https://commonreader.wustl.edu/c/how-democracies-end/)
