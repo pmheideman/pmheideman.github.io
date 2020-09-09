@@ -6,6 +6,9 @@ author_profile: true
 
 # 2020
 
+## "How Democracies End"
+
+[A new study suggests that most democracies are stable but not immune to decline and fall.](https://commonreader.wustl.edu/c/how-democracies-end/)
 
 ## "When Rioting Works"
 
