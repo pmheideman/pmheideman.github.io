@@ -1,0 +1,1118 @@
+---
+title: "Marquette University Introduction to R, Session 1"
+author: "Paul Heideman"
+date: "1/28/2021"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: 4
+urlcolor: blue
+---
+
+```{r include=FALSE}
+library(tidyverse)
+library(haven)
+library(gganimate)
+library(knitr)
+library(usmap)
+```
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+# Introduction
+
+Welcome to this training session on the programming language/software environment R! This document will have all of the code we are going to use in these sessions, which can be copied and pasted from here directly into your RStudio window to try them out.
+
+# Preliminaries
+
+When you fire up RStudio, the window will look something like this:
+<center>
+![RSTudio Window](rstudio.png)
+</center>
+
+Most of your work will take place in the **code editor** window. This is where you can write R scripts (a script is just a set of programming instructions), and save them to be run or edited later. When you run a script or part of a script, R inserts it into the **console**, which is where R processes code. You can also run code by entering it directly into the console. But this is mostly used for making sure a command does what you want it to, or quickly examining some of your data, as code entered here isn't saved into one document the way code in your code editor is.
+
+You can see what I mean with a simple R program. Enter the command below into your console.
+```{r}
+print("Hello World")
+```
+
+Congrats! You've written your first R program. Note that R does what you told it --- it prints "hello world" in the console. You can also run this same line of code by writing it into your code editor, highlighting it, and hitting *Ctrl - Enter* if you are on a Windows or Linux machine, or *Cmd - Enter* if you are on a Mac. When you run code from the code editor like this, note that the output of the code still shows up down in the console.
+
+# The Social Ontology of R
+
+## Functions
+
+There are two basic kinds of things that exist in the world of R: **functions** and **objects**. Functions look like this:
+
+```{r eval=FALSE}
+print()
+table()
+lm()
+```
+
+Functions tell R to do something. For example, this function tells R to output the square root of 49.
+
+```{r eval=FALSE}
+sqrt(49)
+```
+
+In this function, 49 is an **argument**. An argument is anything that goes into a function. In this case, sqrt() takes one argument --- the number to find the square root of.
+
+R is a recursive programming language. That means that the output of one function can be used as the input for another. For example, the function max() finds the maximum of a set of numbers. The function c() combines elements into a **vector**. These can be combined with sqrt() as follows:
+
+```{r eval=FALSE}
+sqrt(max(c(64,81,100)))
+```
+
+In principle, there is no limit to how many functions you can chain together like this. Obviously, if you have more than about three, while R will have no problem reading your code, you will be unable to read it after you walk away from it for more than ten minutes, and another person will find it largely illegible. Since, as two early computer scientists put it, "code is meant to be read by humans, and only incidentally interpreted by computers," this can turn into a problem. Fortunately there's an elegant solution in R which we will return to shortly.
+
+Many functions take multiple arguments. For example, the function sample() is used to pick randomly from a set of elements. If I wanted to simulate rolling a twenty-sided die, I would use
+
+```{r eval=FALSE}
+sample(x=1:20, size=1)
+```
+
+In this case, the function sample is taking two arguments, x, which is the body of elements to sample from, and size, which is the number of times to sample it. R is "smart" at interpreting functions, in that you often don't need to include the name of the argument, just what you want the argument to be. In the case of sample() above, this will produce identical output to the code above:
+
+```{r eval=FALSE}
+sample(1:20, 1)
+```
+
+Sometimes, you'll want to include the argument names to keep things straight for yourself, and other times, you'll know the functions well enough to do without them. To know which arguments a function takes, preface the function with a question mark. This will open up the help file for that function in the lower right quarter of the RStudio window.
+
+```{r eval=FALSE}
+?sample()
+```
+
+Take a minute now, and play around with the sample() function a little. See what works and what doesn't. See if you can embed another function within your call of sample().
+
+## Objects
+
+**Objects** are the other kind of thing in R. If something isn't a function, it's an object. When you use sample to simulate a twenty sided die, as above, the output of that function (let's say it's 3), is an object. 3 is also an object when you just type 3 into the console and hit *enter*. When you enter the name of an object into the console, it will output that object.
+
+There are lots and lots of different types of objects in R. You can find out what type of object something is by using the class() function.
+
+```{r}
+class(3)
+```
+
+3 is, unsurprisingly, a numeric object. The other basic type of object in R is a character **string**. Character strings are denoted by quotation marks around them.
+
+```{r}
+class("three")
+```
+
+What do you think this will return?
+
+```{r eval=FALSE}
+class("3")
+```
+
+There are a lot of other kinds of classes in R, but most of them are basically different kinds of combinations of numeric elements or string elements.
+
+As noted above, the function c() concatenates, or joins, elements into a **vector**.  A vector is a one dimensional set of elements. You can have numeric vectors or string vectors.
+
+```{r}
+c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
+```
+
+In R, a vector has to have all elements of the same type. If you try to make a vector with elements of different types, R will try to force them all to be the same type.
+
+```{r}
+c("one", 2, "three", 4)
+
+class(c("one", 2, "three", 4))
+```
+
+As you can see, a vector will have the class of its elements.
+
+R can handle extremely long vectors. For example, we can use the **colon operator** we used above with the sample() function, which generates a sequence between the objects on either side of the colon, to generate a list of numbers from 1 to 10,000.
+
+```{r}
+1:10000
+```
+
+When you make a vector like any of the ones above, all you are really telling R to do is display the vector you've defined in the console. Most of the time, when you make a vector, you want to do something with it. This will usually mean using that vector as an argument for a function. To do that without having to redefine the vector every time means **assigning** that vector a name. This will save the vector, allowing you to use it for multiple operations without having to redefine it every time. In R, assignment takes place via the <- or -> operators. These two lines of code do the same thing. Notice when you assign a name to an object, it shows up in the upper right quadrant of RStudio.
+
+```{r}
+c(1,2,3,4,5) -> numbers
+
+numbers <- c(1,2,3,4,5)
+```
+
+
+Note that R is case sensitive. Entering "numbers" into the console will output our vector. Entering "Numbers" will not.
+
+```{r}
+numbers
+```
+
+```{r eval=FALSE}
+Numbers
+```
+
+
+Having assigned this vector the name numbers, we can now easily use it in different functions.
+
+```{r}
+sqrt(numbers)
+max(numbers)
+```
+
+The output of one function can be assigned a name, and stored as a new object.
+
+```{r}
+sqrt(numbers) -> numbers.root
+```
+
+#### Exercise 1
+
+Here's a code reading exercise. Try to explain what each line of this code will do. You might have to look back up this document to review!
+
+```{r eval=FALSE}
+5 -> a
+b <- c(1:10, 3,3, 900)
+sample(b, a)
+```
+
+#### Exercise 2
+
+Now try going from English instructions to code. Write code that will create a vector of at least five strings, and then sample two strings from that vector.
+
+#### Excercise 3
+
+What happens when you try to concatenate two vectors?
+
+
+### Data Frames
+
+No one goes through the trouble of learning R to do operations to manipulate one-dimensional vectors. You learn R to analyze datasets. In R, most datasets are represented as a kind of object called a **data frame**. Data frames are two dimensional arrays of information divided into rows and columns.
+
+The data frame mtcars is included with R, an illustrates how data frames are organized.
+
+```{r eval=FALSE}
+mtcars
+```
+
+```{r echo=FALSE}
+
+mtcars %>% kable()
+```
+
+This data frame has 32 rows and 11 columns. The columns include information such as horsepower, engine cylinders, and weight. Note that the car names aren't actually a column. In R, data frames can store a string as the name of each row. If the rows aren't named, R will simply number them sequentially instead. 
+
+
+In looking at a dataframe, you will often want to examine only one part at a time. For example, you might only want to look at one column. To examine a single column of a dataset, use the $ sign.
+
+```{r}
+mtcars$mpg
+```
+
+you might just want to look at the Dodge Challenger row in mtcars. This kind of **subsetting** is achieved via brackets.
+
+```{r}
+
+mtcars["Dodge Challenger",]
+
+```
+
+When using brackets to subset a dataframe, two values are required, separated by a comma. The first indicates the rows to be selected, and the second indicates the columns. Leaving either blank tells R to include all of them. Let's say you wanted to see only the Toyotas, and only miles per gallon and weight.
+
+```{r}
+mtcars[c("Toyota Corolla", "Toyota Corona"), c("mpg", "wt")]
+```
+
+Notice that you have to use the concatenate function to indicate that you want to select more than one row or column. That's because the brackets accept two and only two arguments: rows and columns. Trying to select rows like this will yield an error, because you are trying to give three arguments (one of which is blank) to a function that only accepts two.
+
+```{r eval=FALSE}
+mtcars["Toyota Corolla", "Toyota Corona",]
+```
+
+You can also use **index numbers** to subset. This means using the row and column position to select your subset. These two different ways of subsetting will produce identical output.
+
+```{r}
+mtcars[c("Toyota Corolla", "Toyota Corona"), c("mpg", "wt")]
+
+mtcars[c(20, 21), c(1,6)]
+```
+
+Subsetting with index numbers is often faster. But it can often come back to bite you. If you are altering your dataset, such as adding columns or dropping observations, your row and column index numbers can change, and code that worked at one point will stop working. Knowing how to use index numbers is an important part of R literacy, but there are often better ways to do things.
+
+#### Exercise 1
+
+How do you think you subset a vector?
+
+Data frames can be stored in exactly the same way that vectors or elements can. If we wanted to create a new data frame to just look at the Toyotas, we would just assign our subsetting to a name.
+
+```{r}
+mtcars[c(20, 21), c(1,6)] -> df.toyotas #You can call it whatever you want. I use this format for keeping track of objects I've created.
+```
+
+#### Getting Data
+
+Just as you're not learning R to play with vectors, you're also not learning it to analyze mtcars. You want to analyze interesting data. To do that, you need to find some data. There are a million sources, but most data you find will be in one of three formats: a .csv, a STATA file, or an R file.
+
+A .csv is a "comma separated variable" dataset. Essentially, it's a text file that uses commas to indicate when a new variable begins. It's a very simple, very highly usable data format. There are two main ways to get a .csv. First, you can use R to read it directly from a URL. For example, the [Correlates of State Policy](http://ippsr.msu.edu/public-policy/correlates-state-policy) dataset maintained at Michigan State University, which we will be playing with a lot, is stored here: https://ippsr.msu.edu/sites/default/files/correlatesofstatepolicyprojectv2_2.csv.
+
+To read this dataset directly from the internet, use
+
+```{r eval=FALSE}
+read.csv("https://ippsr.msu.edu/sites/default/files/correlatesofstatepolicyprojectv2_2.csv")
+```
+
+As you can see, this is a very large dataset, with over 2,000 variables. Note that when you enter the code to read the dataset, R simply tries to display the entire dataset in the console. Since the data are contained in 6,120 X 2,091 = 12,796,920 cells, it just tries to list all the variable names instead.
+
+The other way to access these data is to download the file, and load it from your hard drive. Download the .csv, save it on your hard drive (maybe make a new "Data" folder), and load it like this:
+
+```{r eval=FALSE}
+read.csv("~/Downloads/correlatesofstatepolicyprojectv2_2.csv") #Note: your path to file will be different depending on your operating system and where you save the file.
+```
+
+Sometimes it's better to save a dataset on your computer, and sometimes it's better to read it off the internet. If it's a dataset that's regularly updated, it's often easier to just load the data off the internet instead of always re-downloading it. Similarly, if your code just uses a URL to grab the data, you can run your code on another computer on which you haven't downloaded the data, and it will still work. On other other hand, there are a lot of datasets that can't be accessed like this, and just need to be downloaded.
+
+In either of these cases, this code will simply output the data frame in your console. In order to save it as an object you can then analyze and manipulate, you will want to assign it a name.
+
+```{r}
+df.cspp <- read.csv("https://ippsr.msu.edu/sites/default/files/correlatesofstatepolicyprojectv2_2.csv")
+```
+
+Now you can subset this in exactly the same way as mtcars. For big datasets like this, it's often advantageous to subset it to only the variables you need. For example, let's say you just wanted year, state, and population density from this dataset.
+
+```{r eval=FALSE}
+df.cspp[,c("year", "state", "popdensity")]
+```
+
+```{r echo=FALSE}
+df.cspp[1:50,c("year", "state", "popdensity")]
+```
+We can then store it as a new object.
+
+```{r}
+df.cspp[,c("year", "state", "popdensity")] -> df.cspp.trimmed
+```
+
+Loading STATA data (which are stored as .dta files) is slightly more complicated, and brings us to the last of the fundamental R concepts we need to cover: libraries.
+
+As a software environment, R comes with lots and lots of functions. But R is a Turing-complete programming language, which means anything that can be done on a computer can be built with R. If you wanted to, you could build Fortnite from scratch using nothing but R code. That means that what R can theoretically do is unlimited. Moreover, R is free and open-source, meaning anyone can write functions for R. These functions are grouped together in **libraries**. For example, the package "tidycensus" provides functions that make it very easy to download Census tables directly into R.
+
+To install tidycensus, use the following code:
+
+```{r eval=FALSE}
+install.packages("tidycensus")
+```
+
+Once a package is installed, it's available to use in R. However, R will not load every library you've installed in every R session. That would be a waste of memory, and would slow the program down considerably. Instead, R waits for you to tell it what libraries you need to use. You do that with the library() function.
+
+```{r}
+library(tidycensus)
+```
+
+Most people put all of the library commands they need to use at the top of their R script. We'll see what that looks like a little later.
+
+To return to reading STATA files, you need a library to load them. There are a lot of different options, but I prefer the library "haven". Install it and load it in your R session now.
+
+"Haven" uses the function read_dta() in order to read STATA data files. This code will read the Comparative Welfare States dataset from the [Luxemburg Income Study website.](https://www.lisdatacenter.org/news-and-events/comparative-welfare-states-dataset-2020/).
+
+
+```{r eval=FALSE}
+read_dta("http://www.lisdatacenter.org/wp-content/uploads/CWS-stata-2020.dta")
+```
+
+```{r echo=FALSE}
+read_dta("http://www.lisdatacenter.org/wp-content/uploads/CWS-stata-2020.dta") %>%
+  head(50)
+```
+
+
+Now save this dataset by assigning it a name.
+
+Finally, sometimes data are stored in files created by R. These files use the .rda extension. Download the file "presidential_precincts_2016.rda" from the [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LYWX3D). To load the data into R, use this code (once again, you'll need to change the path to where you saved the file).
+
+```{r eval=FALSE}
+load("~/Downloads/presidential_precincts_2016.rda")
+```
+
+When you load an .rda file, you don't need to assign it a name. When these files are created, object names are assigned to them and those names automatically load.
+
+Finally, when you have a data frame saved (so that it shows up in the "data" window in the upper right of RStudio), you can browse the data by clicking on it. You can do the same thing with this code.
+
+```{r eval=FALSE}
+View(df1)
+```
+
+Now, use this code to clear your saved objects. Let's get on with the actually interesting use of R!
+
+```{r eval=FALSE}
+rm(list=ls())
+```
+
+# We've Only Just Begun (To Do Data Carpentry)
+
+Most of what you do in R will not be analysis in the sense of running regressions or other statistical tests, or even making graphs. Most of the work is what makes those things possible. This work is called data carpentry or data cleaning. Data carpentry involves everything from subsetting data to recoding variables to transforming data to merging datasets. It is the fundamental work that makes data analysis possible. It is also what will probably create the most headaches for you.
+
+To learn data carpentry, we're going to focus on two datasets. First, the Correlates of State Policy Project dataset that we looked at above, and the General Social Survey. You already know how to load the CSPP dataset. To load the GSS, load the "foreign" library and use its read.dta function to store the dataset.
+
+```{r}
+library(foreign)
+read.dta("~/Stats/Data/GSS/GSS7218_R1.dta") -> df.gss
+```
+
+There are multiple ways to do anything you want to do in R. Sometimes one way is genuinely better, and sometimes it's purely a matter of aesthetics which one you choose. In this section, we're going to look at some basic data carpentry using "vanilla" R, and then we will move into data carpentry with the tidyverse, a set of packages that work together extremely well to allow you to write flexible and readable R code.
+
+## Data Carpentry in Base R
+
+So far, we've seen how to subset a dataset using square brackets. But the techniques of subsetting we've looked at haven't been very useful. Often, you want to subset based on a variable value. For example, you only want to look at black respondents in a survey. Or you're only interested in years after 1989 in some panel data. This can be done via square brackets fairly simply.
+
+Let's look at the CSPP data (since we deleted all of our objects, you'll need to rerun the code to save the data). If you browse the data frame, you can see it begins in the year 1900. Let's say we're only interested in data after 1970. In that case, we'll want to drop all observations (i.e. rows) in which the year is before 1970. To do that, we need to use **logical** elements.
+
+Logical elements comparable to numeric or string elements, but they can only take two values: TRUE and FALSE. There are lots of expressions you can put into R and have it evaluate whether they are true or false. Three of the most common are >, <, and ==.
+
+```{r}
+5>1
+1>5
+1==5
+5==5
+```
+
+To subset our dataset to only include 1970 and later, we want to produce an expression that will be TRUE for for those dates, and false for any others. We're also going to drop all the columns except 
+
+```{r eval=FALSE}
+df.cspp[df.cspp$year>1969, c("year", "st", "unemployment")]
+```
+
+```{r echo=FALSE}
+head(df.cspp[df.cspp$year>1969, c("year", "st", "unemployment")], 50)
+```
+
+Try running the expression we used to subset.
+
+```{r eval=FALSE}
+df.cspp$year>1969
+```
+
+The result is a vector of logical elements the same length as the vector df.cspp$year. For each element in that vector, R evaluates whether it is greater than 1969, and outputs either TRUE or FALSE depending on the answer. When this vector is placed inside the brackets, R goes through the rows of the dataset, and checks whether the vector's corresponding row (1st row of vector compared with 1st row of dataset, 2nd with 2nd, etc) is either TRUE or FALSE. If it's TRUE, R keeps it. If it's FALSE, R drops it.
+
+You can also use ==. == is different from =. You will forget this a lot, and use = when you should use ==. If we wanted to drop all observations except the year 1999, we do the following.
+
+```{r}
+df.cspp[df.cspp$year==1999, c("year", "st", "unemployment")]
+```
+
+The opposite of == is != (does not equal). If we wanted to dump Illinois from our dataset, to spite the flatlanders, we would use this code.
+
+```{r eval=FALSE}
+df.cspp[df.cspp$st != "IL", c("year", "st", "unemployment")]
+```
+
+We can also use the & operator to combine two conditions. R will then evaluate both of them, and return TRUE only if both of them are true. Let's say we wanted to look at Wisconsin after 1980.
+
+```{r}
+df.cspp[df.cspp$st=="WI" & df.cspp$year>1979, c("year", "st", "unemployment")]
+```
+
+Finally, there's the "or" operator, | (that's shift + the backslash key). If we wanted to look just at the years 1990 and 2000, we could use this operator. Note that | is used in combination with two other expressions that can be evaluated as TRUE or FALSE.
+
+```{r}
+df.cspp[df.cspp$year==1990 | df.cspp$year==2000, c("year", "st", "unemployment")]
+```
+
+Time for some exercises!
+
+### Exercise 1
+
+What if we wanted every year in our dataset *except* the 1980s (Reaganism, hair metal, the rise of Jay Leno --- there are lots of reasons to want to forget the 80s!). What code would do it?
+
+### Exercise 2
+
+Let's say we just wanted to see state-years in which unemployment was above 9%. What code would do it?
+
+### Exercise 3
+
+What if wanted to see the 1990s, but not 1997?
+
+### Exercise 4
+
+Let's compare two states. Say, North Carolina and South Carolina. What code would subset the data to only those two states?
+
+
+## R the Right Way: The Tidyverse
+
+As you can see, the code to subset based on more than one condition gets pretty ugly pretty fast. When you combine that with other operations (for example, let's say you wanted to a vector of unemployment rates converted to decimal notation, which is done by dividing them by 100), things can get downright unreadable.
+
+The tidyverse is a set of libraries designed to fix this problem. To install it, use:
+
+```{r eval=FALSE}
+install.packages("tidyverse")
+```
+
+Then load it using the library() function.
+
+### Using Pipes Like the Mario Bros
+
+The most fundamental change the tidyverse introduces is the **pipe operator**. Pipes look like this: %>%. What they allow you to do is places functions in a line, instead of nested inside one another.
+
+To make this concrete, let's say we wanted to look at unemployment in Wisconsin. And let's say we wanted to look at the change in the unemployment rate each year. We can use the diff() function for that, which takes a numeric vector as an argument, and calculates the difference from row to row. Finally, let's say that we're pretending to be economists, and so we always convert our variables to logarithmic scales to make ourselves feel smart. Since some of the changes are negative, we'll need to make them all positive, which we can do by adding 10 to all of them.
+
+In base R, that looks like this.
+
+```{r}
+log(diff(df.cspp[df.cspp$st=="WI", "unemployment"])+10)
+```
+
+It's pretty hideous to read. What object are you actually starting with here? It takes a few seconds to even figure it out. This is where pipes come to the rescue.
+
+```{r}
+df.cspp[df.cspp$st=="WI", "unemployment"] %>% #note: you can put lots of pipes on the same line, but it's often more readable not to
+  diff() %>%
+  + 10 %>%
+  log()
+```
+
+Note that these two codes produce the exact same output. But the second chunk of code is much easier to read, because you can easily separate out every step of what you're doing, instead of trying to find the innermost function and work backwards from there. From here on out, I'll be using pipes for basically everything.
+
+### Subsetting and Selecting
+
+The tidyverse doesn't just give us a nicer way to write our code here. It also gives us functions that allow us to subset a lot more effectively. The two key functions are select() and filter().
+
+Select is simpler. It simply allows you to select which columns from a dataframe you'd like to keep. We've been using some rather clunky base R nomenclature to keep just the state, year, and unemployment columns from df.cspp. Using select, it's a lot easier to read.
+
+```{r eval=FALSE}
+df.cspp %>% select(year,
+                   st,
+                   unemployment)
+```
+
+```{r echo=FALSE}
+df.cspp %>% select(year,
+                   st,
+                   unemployment) %>%
+  head(50)
+```
+
+You can also use select to rename variables. This is often necessary, because a lot of datasets use totally non-descriptive names like VCF01094 for their variables. In this case, let's say we wanted to change "st" to "state."
+
+```{r eval=FALSE}
+df.cspp %>% select(year,
+                   state=st,
+                   unemployment)
+```
+
+When renaming, the new name goes before the equal sign, and the old name after. Note that in select(), unlike when using square brackets, you don't need to tell R that it's using strings. Since select() is only used for selecting column names, R just assumes that whatever you're entering into it is a string.
+
+The filter() function then allows us to also subset based on variable values. Its logic is fundamentally the same as square brackets. It evaluates statements as TRUE or FALSE and then drops rows for which the condition(s) are false.
+
+```{r}
+df.cspp %>% select(year,
+                   state=st,
+                   unemployment) %>%
+  filter(year==1999)
+```
+
+If you want to subset based on multiple conditions with filter(), just separate them with a comma. Let's say we want to see state-years after 1980 where unemployment was below 5%.
+
+```{r eval=FALSE}
+df.cspp %>% select(year,
+                   state=st,
+                   unemployment) %>%
+  filter(year>1980,
+         unemployment<5)
+```
+
+Now let's do the same exercises we did in base R using the tidyverse.
+
+#### Exercise 1
+
+What if we wanted every year in our dataset *except* the 1980s (Reaganism, hair metal, the rise of Jay Leno --- there are lots of reasons to want to forget the 80s!). What code would do it?
+
+#### Exercise 2
+
+Let's say we just wanted to see state-years in which unemployment was above 9%. What code would do it?
+
+#### Exercise 3
+
+What if wanted to see the 1990s, but not 1997?
+
+#### Exercise 4
+
+Let's compare two states. Say, North Carolina and South Carolina. What code would subset the data to only those two states?
+
+
+
+### Transforming Data
+
+Subsetting data is a very important skill, and you'll probably use either filtering on a variable value or selecting only certain variables to work with on every data set you ever analyze. Most of all you'll need to know is contained above.
+
+You'll spend much more time transforming data. Data can be transformed in lots of ways. Variables can be recoded. You can take a numerical variable, like income, and recode it into buckets (low income, middle income, high income), making it categorical. You can generate new variables based on the values of several existing variables (is a survey respondent white and making an income in the bottom third of the income distribution? Make a new variable (white working class) that gives those people a 1, and everyone else a 0). You can pivot data around a variable value (for example, if you have individual level survey data with a geographic residence variable (like state), you can transform your data into state-level summaries of other variables). You can also make cross-tabs, which display the distribution of two variables values across each other. We're only going to be able to skim the surface of data transformation here, but we'll cover the fundamentals.
+
+#### The Trouble Solved by Tibbles
+
+One place to begin is is with the tibble. A tibble is kind of dataframe specific to the tidyverse. Pretty much any other dataframe can be made into a tibble. Here is mtcars as a tibble, via the function as_tibble().
+
+```{r}
+mtcars %>%
+  as_tibble()
+```
+
+As you can see, tibbles have two very nice properties. One, when you receive them as output in the console, they only print the first ten rows, and they only print enough columns to fill your console screen horizontally. That way, you're not looking at 500 rows of data where you can only see some column names some of the time. Second, they have little labels in pointy brackets telling you what class your variables are.
+
+There are a good number of variable classes in R. The four basic ones are numeric (which can be doubles, having decimals, and integers, which don't), character (which are strings), logical (TRUE or FALSE), and factors. Factors are the most complicated. A factor is a variable which R is treating as a categorical variable, with defined levels. For example, in the GSS, the race variable is coded is "black," "white," and "other." If that were imported into R as a factor in a dataset, you couldn't just add "asian america" or something like that to it, which you could if it were a string. Instead, you'd have to tell R that you're adding a new level to this factor. A lot of very minor headaches in R come from forgetting whether a variable is currently coded as a character or a factor variable. This is one reason tibbles are so nice. They remind you!
+
+From here out, I'm going to convert all dataframes that aren't tibbles into tibbles. Again, the nice thing about the tidyverse is that it's very easy to just throw this is in a pipe!
+
+#### Tabling 
+
+Very often, we want to summarize a lot of data in a table. The simplest form of this is summarizing a vector. The table() function does this. To play with this function, let's switch over to the GSS. 
+
+Examine it in the terminal by entering the object's name (I saved mine as df.gss). As you can see from the summary in the upper right, df.gss has about 64,000 observations and over 6,000 variables. We are *definitely* going to want to select only the variables we are interested in if we are analyzing GSS data!
+
+Let's start by turning our GSS object into a tibble.
+
+```{r}
+df.gss %>%
+  as_tibble() -> df.gss
+```
+
+
+Picking a variable more or less at random, let's say we wanted to look at a summary of people's answer to the religion question. The basic GSS religion variable is relig. The table() function will summarize it for us.
+
+```{r}
+df.gss$relig %>% table()
+```
+
+Lots of Protestants and Catholics, and a sprinkling of others. Since these are survey data, raw counts like this aren't terribly informative. Percentages are what we really want (we are going to ignore issues of survey weighting in this tutorial, since it's a bit more of a substantive statistical topic). This is what the prop.table() function is for. It takes a table, and renders it as percentages.
+
+```{r}
+df.gss$relig %>% table() %>% prop.table()
+```
+
+The GSS as a whole runs from 1972 to 2018, so knowing the distribution of religions across that entire period isn't terribly informative. It's probably more useful to get a table for a subset of years, or even a single wave of the survey.
+
+```{r}
+df.gss %>%
+  filter(year==2000) %>%
+  select(relig) %>%
+  table() %>%
+  prop.table()
+```
+
+Note that in this example I started with the dataset as a whole, rather than starting with the single vector as I did in the previous code chunk. This is because I need to have the year variable in order to filter based on it.
+
+What about a table of two variables? This is called a **crosstab**. The table() function can also be used to make one. In this case, let's look at the relationship between marital status and race. Because table() needs to take two arguments here, it might be easiest to do things without a pipe.
+
+```{r}
+table(df.gss$race, df.gss$marital)
+```
+
+The disadvantage of this simple line of code is that it's not terribly easy to do it for only a single year. To do that, it's simplest to store your subsetted dataset as a new object. Let's also look at proportions here, since again, raw counts aren't terribly useful in a survey.
+
+```{r}
+df.gss %>%
+  filter(year==2000) -> df.gss.2000
+
+table(df.gss.2000$race, df.gss.2000$marital) %>% prop.table()
+```
+
+Note the output from this isn't immediately easy to interpret. To read a table like this, you need to know whether the first row, first column cell tells us the percentage of whites who are married, or the percentage of married people who are white. The default in prop.table() is to tell us neither; instead, it tells us the total share of observations represented by each cell. For example, 38% of respondents are white and married, while about 5% are black and never married.
+
+To display marginal shares instead, we need to tell prop.table() we want to calculate based on row margins. Take a look at the help file for prop.table().
+
+```{r eval=FALSE}
+?prop.table()
+```
+
+We can see that prop.table() takes two arguments: the table generated by table(), and margin. To calculate row percentages (ie the percent of whites who are married), we enter a 1. Note: Like a lot of functions, prop.table() has essential arguments (the table) and optional arguments (margin). In a pipe, R will always try to send the pipe output into the essential argument. If we want to add an option argument, we just add it without specifying the essential argument.
+
+```{r}
+table(df.gss.2000$race, df.gss.2000$marital) %>% prop.table(1)
+```
+
+If we wanted column marginals (percentage of married people who are white), we would simply enter 2 instead of 1.
+
+##### Exercise 1
+
+How has the distribution of educational attainment changed in the US from the year 1990 to the year 2010? Use the GSS variable "degree" to answer this question. (Hint: make two tables and compare them)
+
+##### Exercise 2
+
+How are religious fundamentalism and confidence in American business related since 2010? Use the GSS variables "conbus" and "fund" to answer.
+
+
+##### Exercise 3
+
+Do people who were born outside of the US place a different value on hard work from people who weren't? Answer using data from 2018, and the variables "born" and "workhard". 
+
+
+
+#### Pivot Tables
+
+So far, we've been looking at data transformations that summarize and compare chunks of existing data. We can also make **pivot tables**, which are tables that pivot data around certain variables. For example, in our df.cspp dataset, we have unemployment, state, and year data. We can pivot that data on the year variable to find average unemployment for the country as a whole. In the tidyverse, the group_by() and summarize() functions are used for this.
+
+```{r}
+df.cspp %>%
+  as_tibble() %>%
+  group_by(year) %>%
+  filter(is.na(unemployment)==FALSE) %>%
+  summarise(avg_unemployment = weighted.mean(unemployment,
+                                             poptotal,
+                                             na.rm=TRUE))
+```
+
+group_by() is an incredibly useful function, and one we'll be returning to shortly when we talk about recoding variables. It splits your data up into groups, and then does whatever operation you're telling R to do on each group. In this case, we've told R that each year is a distinct group. Then, the summarise() function tells R to collapse each group into a single observation using a function. Here, we've told R to find the weighted mean (we need to use a weighted mean here because the unemployment rate in New York will have a bigger impact on the average than the unemployment rate in Wisconsin) of unemployment in each group. The na.rm=TRUE tells R to throw out observations with missing data. Some functions do this automatically, others need to be told how to handle it. As always, use the help function ( ?weighted.mean() ) to figure out what's necessary.
+
+You can also group based on more than one variable. In that case, groups will be formed by the discrete combinations of values of the variables. For example, if you grouped based on a race variable that was black, white, and other, and on a education variable that was college-educated and non-college educated, you would have six groups (3 X 2).
+
+We can use this to look at race and gender in voting in 2016.
+
+```{r}
+df.gss %>%
+  filter(year==2018) %>%
+  group_by(race, sex, PRES16) %>%
+  tally()
+```
+
+The tally() function is similar to summarise(), except simpler. It just counts how many observations are in each group that you've indicated. Once again, since this is a survey, raw counts aren't very useful. But using the mutate() function, which we will cover in more depth soon, you can easily turn this into percentages.
+
+```{r}
+df.gss %>%
+  filter(year==2018) %>%
+  group_by(race, sex, PRES16) %>%
+  tally() %>%
+  mutate(vote.share = prop.table(n))
+```
+
+##### Exercise 1
+
+As you can see, these answers include people who didn't vote and people for whom the question is inapplicable. How would you alter this code so that your data only included people who answered Clinton or Trump?
+
+##### Exercise 2
+
+In the CSPP, the variable "right2work" tracks the passage of right to work laws. Make a pivot table that shows us the number of states that do and don't have right to work laws in each year. (Hint: this is similar to counting how many people voted for each presidential option).
+
+##### Exercise 3
+
+What are the average personal incomes ("realrinc") by race ("race") for each year in the GSS?
+
+#### Recoding Data
+
+Our data often fail us. The thing we want is measured wrong, or needs to be constructed from other measures. This is where recoding data comes in. Of all the things you can do to data that we've talked about today, you'll probably spend the most time recoding.
+
+In the tidyverse, the fundamental recoding function is mutate(). mutate() can be used either to add a new variable or transform an existing variable. For example, in the GSS, if we wanted to take the log of household income ("realinc"), we would use mutate as follows.
+
+```{r}
+df.gss %>%
+  mutate(loginc = log(realinc))
+```
+
+We can compare our new variable with our old using select to only view those columns.
+
+```{r}
+df.gss %>%
+  mutate(loginc = log(realinc)) %>%
+  select(realinc, loginc)
+```
+
+Here, we tell R to create a variable called loginc, and define it as the log of the variable realinc. Note that in doing so, we haven't actually changed the object df.gss. To do that, we need to add a store instruction.
+
+```{r}
+df.gss %>%
+  mutate(loginc = log(realinc)) -> df.gss
+```
+
+We can also use mutate to combine two variables. For example, we can divide household income by the square root of the number of household members ("hompop"), which is the Census Bureau's recommended method of adjusting household income for household size.
+
+```{r}
+df.gss %>%
+  mutate(adj.realinc = realinc/sqrt(hompop)) -> df.gss
+```
+
+These are some pretty simple mathematical transformations of variables. R can do things that are much more interesting. For example, we can turn a continuous variable, like income, into a categorical variable that is easier to work with in some cases, like tables.
+
+
+Do something here on transforming a continuous variable to categorical for use in tables. Essentially, this means taking something continuous, like income, and chopping it up into a few buckets. In the tidyverse, the ntile() function does this extremely nicely. Let's say we want a variable of income quintiles.
+
+```{r}
+df.gss %>%
+  group_by(year) %>% #quintiles should be calculated with reference to the income distribution from the year of the survey
+  mutate(realrinc.quintiles = ntile(realrinc, 5)) -> df.gss
+```
+
+
+Since we stored this transformation, we can now make some nice tables using income, which we couldn't do before.
+
+```{r}
+table(df.gss$degree, df.gss$realrinc.quintiles) %>% prop.table(1)
+```
+
+A lot of recoding that you'll want to do is based on "if then" type statements. For example, if someone is white and their income is in the bottom third of the distribution, we'd like to label them as white working class. Or if someone has said they are "very conservative" or "somewhat conservative," we'd like to simplify that into a variable where either answer marks someone as "conservative." For these situations, we want case_when().
+
+case_when() typically gets inserted inside of a mutate() command. It has a basic two part structure. The first part is an expression that can be evaluated as TRUE or FALSE. If the statement is TRUE for a given row, then R will throw in the second part as a new value.
+
+For example, here we do a very simple recode that just gives us a 1 if someone makes above the median income, and a 0 if they don't.
+
+
+
+```{r}
+df.gss %>%
+  group_by(year) %>%
+  filter(is.na(realrinc)==FALSE) %>% #This line drops all observations where realrinc is NA
+  mutate(abov.med = case_when(realrinc > median(realrinc) ~ 1,
+                              realrinc <= median(realrinc) ~ 0)) %>%
+  select(realrinc, abov.med)
+```
+
+The tilde ("~") separates the two arguments here. realrinc > median(realrinc) can be evaluated as TRUE or FALSE. If it's TRUE, R puts a 1 in the new variable abov.med. If it's false, R goes down to the next condition in your case_when() call, and checks if it's true or false. Since here our conditions are cumulatively exhaustive, we only need two. Because of this fact, when you're writing a case_when() call, you never actually need to specify your last condition. If everything not covered by one of your preceding conditions falls into the same category, you can just throw a TRUE in for your last one, and everything that's left will get the value you associate with it.
+
+```{r}
+df.gss %>%
+  group_by(year) %>%
+   filter(is.na(realrinc)==FALSE) %>%
+  mutate(abov.med = case_when(realrinc > median(realrinc) ~ 1,
+                              TRUE ~ 0)) %>%
+  select(realrinc, abov.med)
+```
+
+Here's how you'd use case_when() to code people as white working class or not.
+
+```{r}
+df.gss %>%
+  group_by(year) %>%
+   filter(is.na(realrinc)==FALSE) %>%
+  mutate(inctile = ntile(realinc,3)) %>% #income into terciles by year
+  mutate(wwc = case_when(race=="white" & inctile==1 ~ 1, #White and lowest tercile
+                         TRUE ~ 0)) %>%
+  select(year, inctile, race, wwc)
+```
+
+##### Exercise 1
+
+Use case_when() to create a new variable that tells us whether someone's height ("height") is greater than average. (Bonus: use group_by() to make this comparison year and sex specific.)
+
+
+##### Exercise 2
+
+The GSS has an unnecessarily complicated political party identification scheme. Take a look at it:
+
+```{r}
+df.gss$partyid %>% table()
+```
+
+Why not simplify it into three categories: liberal, conservative, and independent?
+
+##### Exercise 3
+
+The GSS asks a number of questions about national spending priorities. Let's look at two, "natheal", which looks at healthcare, and "nateduc", which looks at education. Let's say we wanted to group respondents into three categories: cutters, who want to reduce spending on both; spenders, who want to increase spending on both; and midroaders, who want something in between. How would you use case_when() to create a new variable, spending.attitude, with these categories?
+
+
+
+
+#### Merging Data
+
+
+Sometimes we want variables from multiple datasets. This is one area R has a huge advantage over programs like STATA or SPSS, because it's very simple in R to work with multiple datasets at once.
+
+The function in the tidyverse for merging datsets is inner_join(). Inner join takes three arguments: your first dataset, your second dataset, and then the columns that specify unique observations. For example, in our CSPP dataset, the combination of state and year is sufficient to identify a unique row. So if we were merging another dataset with the full CSPP dataset, it would also need to have a variable called state and a variable called year. Merging those two datasets would look something like this.
+
+```{r eval=FALSE}
+inner_join(df.cspp, second.df, by=c("state", "year"))
+```
+
+To illustrate how this works, I've prepared two very simple and processed datasets that can be easily merged. One comes from CSPP, and has states, years, and right to work status. The other comes from the American National Elections Survey, and has states, years, and respondents' "feeling thermometer" for big business. You can download them both from my github [here](https://raw.githubusercontent.com/pmheideman/pmheideman.github.io/master/files/anes2merge.csv) and [here](https://raw.githubusercontent.com/pmheideman/pmheideman.github.io/master/files/cspp2merge.csv). Just use ctrl + s (or cmd + s if you're on mac) to save the files, and then load them in R and assign them names using read.csv.
+
+Once you've done that, merge them, and save the resulting dataset.
+
+```{r eval=FALSE}
+inner_join(name1, name2, by=c("state", "year")) -> df.merged
+```
+
+Examine the resulting dataset. As you can see, it has about 34,000 rows. This is because effectively what we have now are the ANES data, but with an extra variable added that isn't in that survey: whether the respondent lived in a state that was right to work in the year of the study.
+
+From here, it's very simple to turn this into a pivot table that shows us the average feeling thermometer for respondents in right to work and non-right to work states by year. 
+
+
+```{r eval=FALSE}
+df.merged %>%
+  group_by(year, right2work) %>%
+  summarise(avg.temp = mean(big.bus))
+```
+
+Note: all the real work of making this table consisted of processing the datasets to make them easy to merge. You can see the R script I used to do that, and download it and run it on your computer, [here](https://github.com/pmheideman/pmheideman.github.io/blob/master/files/cleaningandmerging.R).
+
+Merging datasets will always be a pain. Two variables that measure the same thing will be named different things, or will have a slight difference in their coding that you have to identify and fix before you can merge them. You should never expect it to work the first time you try to merge two datasets.
+
+# Data Visualization
+
+> Words divide, pictures unite. - Otto Neurath
+
+Data visualization is the most effective way to present data. A table of numbers will always take your reader more effort to decipher than a graphical plot will. A lot of the tables that we made in the previous section would be much better as plots. So let's plot some data.
+
+The best way to make plots in R is with the library ggplot2, which is part of the tidyverse. Since you already installed the tidyverse, you already have ggplot2.
+
+ggplot2 is based around two fundamental concepts **aesthetics** and **geometries**. Aesthetics are variables in your dataset mapped to concepts in your plot. For example, if you place a variable like education on the x axis, and a variable like income on your y axis, each of those is an aesthetic. There are lots of other kinds of aesthetics besides x and y axis that can be employed, but for now, let's stick with those two.
+
+Geometries are how your data are represented. Line graph, bar graph, heat map, box plot, histogram --- all of these are geometries in ggplot2.
+
+Here's a simple example of what it looks like, using mtcars.
+
+```{r}
+mtcars %>%
+  ggplot(aes(x=wt, y=mpg)) +
+  geom_point()
+```
+
+As you can see, the two parts of ggplot are contained in two different functions. First, we have the ggplot() function. Inside this function, we place the aes() function, whose arguments are the different aesthetics we want to map. Then, our geometry function, geom_point, is added with a "+" sign. Note that it is NOT a pipe. Once you feed your data into ggplot, subsequent ggplot functions to change your graph are added with "+", not "%>%".
+
+We can add another aesthetic to this plot easily. Let's say we want to also be able to see how the number of cylinders fits in to this relationship. One way to do that is by having the points be different colors based on the number of cylinders.
+
+```{r}
+mtcars %>%
+  ggplot(aes(x=wt, y=mpg, color=as.factor(cyl))) + #Turn a continuous variable into a categorical one.
+  geom_point()
+```
+
+Note that I transformed cyl, a numeric variable, into a categorical one using the function as.factor(). This didn't change the dataset at all. Instead, it told R to transform the data in the process of plotting it. Color can also be used to represent numeric variables, but in this case, since cyl is a variable with three levels, it made more sense to tell R to treat it as categorical, rather than as numeric.
+
+Another aesthetic that can be used is size. This time, let's use it to look at a continuous variable --- horsepower.
+
+```{r}
+mtcars %>%
+  ggplot(aes(x=wt, y=mpg, size=hp)) + 
+  geom_point()
+```
+
+##### Exercise 1
+
+Take a look at the dataset diamonds, which is included with ggplot2. Make a plot with carat on the x axis, price on the y axis, and then choose one other variable to map to either color or size. Is the variable numeric or categorical? Is it, like cyl, coded as numeric, but actually functions more like a categorical variable, and therefore should be transformed? Make your plot and show it off!
+
+## Types of graphs
+
+There are lots of different kinds of graphs. In this tutorial, we're going to focus on a few of the most common, while highlighting a few of the different tricks you can use to represent data in different ways. In these examples, we will mostly work with variables that aren't going to require a lot of recoding or other carpentry on our part. But keep in mind, most of the time you make graphs, most of the work will be data carpentry to get the data in the shape you want it to make a graph, not making the graph itself (though sometimes that can be tricky too!).
+
+### Histograms
+
+One of the simplest kind of graphs is a **histogram**.  Histograms represent the distribution of a numeric variable. Here's a histogram of height in the GSS, for all years.
+
+```{r}
+df.gss %>%
+  select(height) %>% 
+  ggplot(aes(x=height)) + geom_histogram()
+```
+
+What's up with that big spike just over 70 inches? Seems statistically improbable!
+
+As you can see in the code, histograms only require one aesthetic (i.e. one variable). That variable is mapped on to the X axis, and the Y axis is then automatically the count, or frequency, or observations at that value of the X axis variable.
+
+There are two primary ways you'd change histograms. First, you can alter how fine-grained the binning of the X axis is. This affects how many bars are in your plot. You alter this with the "bins" argument in the geom_histogram() function. The default is 30 bins, which in this case actually lines up with our observed range (about 45 to 85) pretty well.
+
+```{r}
+df.gss %>%
+  select(height) %>% 
+  ggplot(aes(x=height)) + geom_histogram(bins=60)
+```
+
+The other primary way to alter a histogram is by adding another aesthetic (i.e. another variable). Here, the obvious one to add is sex.
+
+```{r}
+df.gss %>%
+  select(height, sex) %>% 
+  ggplot(aes(x=height, fill=sex)) + geom_histogram(position = "dodge")
+```
+
+Here, we need to add sex to our select() call, since we need it in the data we're sending into ggplot(). Then, we add the "fill" aesthetic in our aes() function. Note that this is different from the "color" aesthetic we used above. With points and lines, you use color. With bar graphs and other polygon plots, you use "fill". For polygon plots, "color" only affects the outline of the polygons, not their internal colors. We also need to add the 'position = "dodge"' argument to geom_histogram(), which tells R to put the bars side by side for each height, rather than on top of one another.
+
+#### Exercise 1
+
+Choose a numeric variable from the GSS (you can use the [data explorer](https://gssdataexplorer.norc.org/) to search for variables, or just ask me for suggestions). Create a histogram of it, using a second variable to split the data (I'd suggest something simple and dichotomous or trichotomous, like race ("race"), or sex ("sex"), or divorce status ("divorce"), or ever unemployed in last ten years ("unemp")).
+
+#### Exercise 2
+
+Use the filter() function to subset the GSS based on some variable, and then create a histogram of a variable from the subsetted data.
+
+
+### Scatter Plots
+
+Scatter plots are good for dealing with lots of data, like surveys, or like international panel data. They work best when both x and y variables are continuous. For example, in the CSPP, we can look at the evangelical share of state population, and a state's per capita corrections spending (we have expenditure spending, and population, and so can easily construct that measure).
+
+```{r}
+df.cspp %>%
+  as_tibble() %>%
+  select(st,
+         year,
+         poptotal,
+         exp_correction,
+         evangelical_pop) %>%
+  mutate(pcec = (exp_correction*1000)/poptotal) %>%
+  ggplot(aes(x=evangelical_pop, y=pcec)) + geom_point()
+```
+
+We could add information to this plot by using the color aesthetic. The CSPP uses a four region coding scheme, in which the south is 1, the west is 2, the midwest is 3, and the northeast is 4.
+
+```{r}
+df.cspp %>%
+  as_tibble() %>%
+  select(st,
+         year,
+         poptotal,
+         exp_correction,
+         evangelical_pop,
+         region) %>% #adding region to our chosen variables
+  mutate(pcec = (exp_correction*1000)/poptotal) %>%
+  ggplot(aes(x=evangelical_pop, y=pcec, color=as.factor(region))) + #Once again, converting a numeric variable to categorical
+  geom_point()
+```
+
+There are a number of other aesthetics you can use with geom_point(). Shape and size are the two most useful. Here's the same plot, but using shape instead of color to represent region.
+
+```{r}
+df.cspp %>%
+  as_tibble() %>%
+  select(st,
+         year,
+         poptotal,
+         exp_correction,
+         evangelical_pop,
+         region) %>% #adding region to our chosen variables
+  mutate(pcec = (exp_correction*1000)/poptotal) %>%
+  ggplot(aes(x=evangelical_pop, y=pcec, shape=as.factor(region))) + #Once again, converting a numeric variable to categorical
+  geom_point()
+```
+
+If you wanted, you could combine all three of them, to represent five different variables' relationships on one plot. That would make for a very difficult to read plot. In practice, you probably only want to map 3 variables (maybe 4 if you have a *very* good reason).
+
+A lot of variables are technically numeric, but act more like categorical variables in their distributions. The years of education variable, "educ", in the GSS is like this. Technically its numeric, but there are only 20 possible values, and there's obviously a lot of clustering at 12 and 16. For variables like this, geom_jitter() is a very helpful function.
+
+```{r}
+df.gss %>%
+  filter(year==2018) %>%
+  ggplot(aes(x=educ, y=realrinc)) + geom_jitter()
+```
+
+For plots like this, it can be helpful to draw lines of best fit. The function geom_smooth() lets us do this.
+
+```{r}
+df.gss %>%
+  filter(year==2018) %>%
+  ggplot(aes(x=educ, y=realrinc)) + geom_jitter() +
+  geom_smooth(se=FALSE) # se=FALSE tells it not to draw a confidence interval
+```
+
+By default, geom_smooth() uses lowess smoothing, an algorithm that calculates locally weighted means of the y variable for every value of the x variable. But you can also have it draw a linear regression line, equivalent to the line $y=a + bx$ if you fit a bivariate regression.
+
+```{r}
+df.gss %>%
+  filter(year==2018) %>%
+  ggplot(aes(x=educ, y=realrinc)) + geom_jitter() +
+  geom_smooth(method = "lm",
+              se=FALSE) # se=FALSE tells it not to draw a confidence interval
+```
+
+
+
+geom_text
+
+
+### Line plots
+
+
+### Bar Plots
+
+dodge vs stack
+
+
+cheatsheet: https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
+
+
+### Faceting
+
+
+
+```{r}
+df.gss %>%
+  ggplot(aes(x=educ, y=realrinc)) + geom_jitter() +
+  geom_smooth(method = "lm",
+              se=FALSE) + # se=FALSE tells it not to draw a confidence interval
+  facet_wrap(~year)
+```
+
+### Maps
+
+One cool use for ggplot2 is maps. Since ggplot2 can make polygons, it can draw maps. Making maps can be a little tricky, because it always involves merging data, and merging data almost always involves some data cleaning. But once you get the hang of it, it can be a really nice way to represent data.
+
+In this tutorial, I'm going to focus on US maps, though you can also download packages that let you draw world maps for international data. My preferred map package is "usmap". Install it and load it now.
+
+To draw a map, we need a data frame that tells R where to draw lines. We get that dataframe with the following code.
+
+```{r}
+us_map(regions="states") %>% as_tibble()
+```
+
+As you can see, this data frame has, for each state, a series of x and y values and a number of other variables. To use it, we should save it as data frame.
+
+```{r}
+us_map(regions="states") %>% as_tibble() -> df.map
+```
+
+Now we need some data to map. Let's use the CSPP unemployment data we've been using. To do this, we need to merge the data, and to do that, we need a variable with the same name (easy to fix) that's coded the exact same way (can be a major pain) in both datasets.
+
+There's a shortcut to checking this. It involves the unique() function, which takes a vector or dataframe as an argument, and outputs the unique elements (or, in a data frame, rows) in it. This lets us check whether the coding in the two variables is the same. In this case, let's look at the abbreviated state names, since those will be easier to change if they need to be.
+
+```{r}
+unique(df.cspp$st) == unique(df.map$abbr)
+```
+
+In this case, the two are unique, so we only need to change the name of one of them to make them mergeable. Let's take only the variables we need from our measured data to reduce clutter. I'll also filter by year to give us only one year of data, though the procedure would be identical if I were merging with all years.
+
+```{r}
+df.cspp %>%
+  filter(year==2010) %>%
+  select(abbr = st, #changing the name of this variable to match the one in df.map
+         unemployment) -> df.donor
+```
+
+Now it's simply a matter of merging the data sets, and sending the resulting data set into ggplot().
+
+```{r}
+inner_join(df.map, df.donor, by="abbr") %>%
+  ggplot(aes(x=x,y=y,fill=unemployment, group=group)) +  #Note you need group=group here.
+  geom_polygon(color="black") + #color="black" draws state lines in black 
+  coord_fixed() #This tells R to preserve the aspect ratio, no matter the size of the image
+```
+
+
+
+
+
+
+## Making Your Plot Visually Pleasing
+
+labs, theme_bw, annotations
+
+
+## Animations
+
+An extension of ggplot2, the library [gganimate](https://gganimate.com/index.html), has the ability to create animated graphics. While obviously these animations can't be used in papers, they can be quite nice for presentations and other forms of public scholarship. 
+
+Fundamentally, animations do the same thing that faceting does. It takes a variable, and splits your plot into multiple plots based on values of that variable. Instead of using facet_wrap() or facet_grid(), however, you use one of gganimate's transition functions. To see what I mean, let's look at diamonds first faceted by color, and then animated.
+
+```{r}
+diamonds %>% ggplot(aes(x=carat,y=price, color=color)) + geom_point() + facet_wrap(~color)
+
+diamonds %>% ggplot(aes(x=carat,y=price, color=color)) + geom_point() + transition_states(color)
+```
+
+As you can see, the only difference in the code is substituting transition_states() for facet_wrap(). As you saw when running this code, animation takes time. Because of this, it's often helpful to test your code using facet_wrap(), and only move it to an animation when you're sure all the other parts of it are working correctly.
+
+
+
+
